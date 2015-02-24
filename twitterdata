@@ -8,7 +8,6 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 import java.net.UnknownHostException;
 import java.util.List;
-import java.util.Scanner;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -23,6 +22,7 @@ public class Twitterdata {
     private ConfigurationBuilder cb;
     private DB db;
     private DBCollection items;
+    public String id;
 
     public static void main(String[] args) throws InterruptedException {
         Twitterdata taskObj = new Twitterdata();
@@ -30,10 +30,8 @@ public class Twitterdata {
     }
 
     public void loadMenu() throws InterruptedException {
-        System.out.print("Please choose your Keyword:\t");
-        Scanner input = new Scanner(System.in);
-        String keyword = input.nextLine();
-        connectdb(keyword);
+        String keyword = "@RedMartcom";
+        connectdb();
         int i = 0;
         while (i < 1) {
             cb = new ConfigurationBuilder();
@@ -48,14 +46,14 @@ public class Twitterdata {
         }
     }
 
-    public void connectdb(String keyword) {
+    public void connectdb() {
         try {
 
             initMongoDB();
-            items = db.getCollection(keyword);
+            items = db.getCollection("RedMartcom");
 
-            BasicDBObject index = new BasicDBObject("tweet_ID", 1);
-            items.ensureIndex(index, new BasicDBObject("unique", true));
+            BasicDBObject index = new BasicDBObject("tweet_text", 1);
+            items.ensureIndex(index,new BasicDBObject("unique", true));
         } catch (MongoException ex) {
             System.out.println("MongoException :" + ex.getMessage());
         }
@@ -79,9 +77,10 @@ public class Twitterdata {
             try {
                 Query query = new Query(keyword);
                 query.setCount(100);
-                query.setSince("2013-02-22");
+               
                 QueryResult result;
                 result = twitter.search(query);
+                System.out.println(query);
                 System.out.println("Getting Tweets...");
                 List<Status> tweets = result.getTweets();
                 for (Status tweet : tweets) {
@@ -91,13 +90,27 @@ public class Twitterdata {
                     basicObj.put("tweet_followers_count", tweet.getUser().getFollowersCount());
                     basicObj.put("source", tweet.getSource());
                     
+                    basicObj.put("in_reply_to_screen_name",tweet.getInReplyToScreenName());
+                    basicObj.put("in_reply_to_status_id",tweet.getInReplyToStatusId());
+                    basicObj.put("in_reply_to_user_id",tweet.getInReplyToUserId());
+                    basicObj.put("id",tweet.getId());
+                    basicObj.put("User Description",tweet.getUser().getDescription());
+                    basicObj.put("Profile Location",tweet.getUser().getLocation());
+                    basicObj.put("Lang",tweet.getLang());
+                    basicObj.put("Statuses_count",tweet.getUser().getStatusesCount());
+                    basicObj.put("Friends_count", tweet.getUser().getFriendsCount());
+                  
+                   
+               
+                    basicObj.put("Profile Image URL",tweet.getUser().getProfileImageURL());
+  
                     UserMentionEntity[] mentioned = tweet.getUserMentionEntities();
                     basicObj.put("tweet_mentioned_count", mentioned.length);
                     basicObj.put("tweet_ID", tweet.getId());
-                    basicObj.put("tweet_text", tweet.getText());
+                    basicObj.put("tweet_text",tweet.getText());
                     basicObj.put("Created_at",tweet.getCreatedAt());
                     try {
-                        items.insert(basicObj);
+                        items.save(basicObj);
                     } catch (Exception e) {
                         System.out.println("MongoDB Connection Error : " + e.getMessage());
                     }
