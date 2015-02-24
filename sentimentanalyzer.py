@@ -8,7 +8,7 @@ import datetime
 
 client = pymongo.MongoClient('mongodb://localhost:27017/tweetDB2')
 db = client['tweetDB2']
-RedMartc = db['@RedMartcom']
+RedMartc = db['RedMartcom']
 
 
 
