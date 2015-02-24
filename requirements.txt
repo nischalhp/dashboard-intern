@@ -8,3 +8,5 @@ ENTITY EXTRACTOR
 JAVA TWITTER 4J LIBRARIES
 JAVA MONGO DRIVER
 TWITTER CREDENTIALS
+bootstrap download http://getbootstrap.com/getting-started/ download source 
+go to docs->examples->dashboard use 
