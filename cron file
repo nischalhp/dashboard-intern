@@ -1,0 +1,6 @@
+# This cron job stores new tweets into mongodb at singapore 2:30 pm
+20 12 * * * java -jar /Users/burhan/NetBeansProjects/twitterdata/dist/twitterdata.jar > /Imadwork/majorpro/task1/log/cron.log
+
+# This cron job does sentiment analysis on tweets and stores it in mongodb
+25 12 * * * /usr/local/bin/python /Imadwork/majorpro/task1/nec.py >> /Imadwork/majorpro/task1/log/cron2.log
+
