@@ -18,10 +18,25 @@
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="static/js/ie-emulation-modes-warning.js"></script>
     
+    <script src="static/js/ie-emulation-modes-warning.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
     <script src="static/js/Chart.js"></script>
     
+    
+    <script src="static/js/jquery_simple_progressbar.js"></script>
+    
+    <style>
+        #content {
+            padding-left: 50px; 
+            margin-top:150px;
+            font-family: verdana
+        }
+        #content pre, #content p {
+            margin-bottom: 50px;
+        }
+    </style>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -49,18 +64,18 @@
     </nav>
 
 
-        <div class="col-sm-5 col-sm-offset-3 col-md-8 col-md-offset-2 main">
-                       <h1 class="page-header" align="center">Twitter Sentiment Dashboard</h1>
+        <div class="container main">
+                       <h1 class="page-header" align="center">Social Media Dashboard</h1>
          
  
           <div id="canvas-holder" align="center">
 			<canvas id="chart-area" width="300" height="300" />
 		</div>
 
-{% for RedMart in countcl %}              
+  {% for RedMart in countcl %}          
 
 <script>
-	
+
 var pieData = [   
                             {   
 					value:{{ RedMart['cpos'] }} ,
@@ -89,46 +104,77 @@ var pieData = [
 
     
 	</script>
-   {% endfor %}   
-          <h2 class="sub-header">Tweets</h2>
+{% endfor %}   
+
+
+
+     <h2 class="sub-header">Tweets</h2>
+    
+    
           
-          <div class="table-responsive">
-            <table class="table table-striped">
+         
+          <div class="table-responsive;" style="height: 1000px; width: 1000px;overflow:scroll;" >
+            
+      
+
+
+
+            <table style="table-layout:Fixed;" class="table table-striped" >
+            <col width="400">
+            <col width="55">
+            <col width="200">
+            <col width="100">
+            </col>    
               <thead>
                 <tr>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
+                  <th>Text</th>
+                  <th>Date</th>
+                  <th>Sentiment Bar</th>
+                  <th>Entities</th>
+                  
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="content-body">
+               
                {% for RedMart in tweets %} 
                 <tr>
                  
                   <td>{{ RedMart['tweet_text'] }}</td>
-                  <td>{{ RedMart['Created_at'] }}</td>
-                  <td>{{ RedMart['classify'] }}</td>
+                  <td style="overflow:hidden; white-space: nowrap;">{{ RedMart['Created_at']}}</td>
+                  <td><div name='{{RedMart['pos']}}' >{{ RedMart['pos']}}</div></td>
                   <td></td>
-                  <td></td>
-                  {% endfor %}
                 </tr>
-                
-              </tbody>
+                {% endfor %}
+              </tbody>     
+           
             </table>
+      
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>
-    <script src="static/js/docs.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="static/js/ie10-viewport-bug-workaround.js"></script>
+ 
+      
+     <script>
+       
+      
+     $('#content-body').each(function () {
+        
+        var rows = this.rows;
+        $(rows).each(function() {
+        var sentiment = $(this.children[2]).text();  
+        console.log(sentiment);
+        var object = document.getElementsByName(sentiment);  
+        $(object).simple_progressbar({
+         value: sentiment * 100 ,height: '25px',
+                                           internalPadding: '1px',
+                                           normalColor: 'green',
+                                           backgroundColor: 'red',
+                                           width: '200px'});
+                                           });
+        });
+       
+    </script>
   </body>
 </html>
+
