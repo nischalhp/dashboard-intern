@@ -19,6 +19,9 @@
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="static/js/ie-emulation-modes-warning.js"></script>
+    
+    <script src="static/js/Chart.js"></script>
+    
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -28,6 +31,7 @@
   </head>
 
   <body>
+     
 
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
@@ -38,45 +42,61 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">redmart</a>
+          <a class="navbar-brand" href="#">REDMART</a>
         </div>
     
       </div>
     </nav>
 
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Sentiment Dashboard</h1>
+        <div class="col-sm-5 col-sm-offset-3 col-md-8 col-md-offset-2 main">
+                       <h1 class="page-header" align="center">Twitter Sentiment Dashboard</h1>
+         
+ 
+          <div id="canvas-holder" align="center">
+			<canvas id="chart-area" width="300" height="300" />
+		</div>
 
-          <div class="row placeholders">
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-          </div>
+{% for RedMart in countcl %}              
 
+<script>
+	
+var pieData = [   
+                            {   
+					value:{{ RedMart['cpos'] }} ,
+					color: "#46BFBD",
+					highlight: "#5AD3D1",
+					label: "POSITIVE" 
+                                       
+                                },
+                                
+				{    
+					value:{{ RedMart['cneg'] }},
+                                        color:"#F7464A",
+					highlight: "#FF5A5E",
+					label: "NEGATIVE"
+                                   
+				}
+                                
+
+			];
+
+			window.onload = function(){
+				var ctx = document.getElementById("chart-area").getContext("2d");
+				window.myPie = new Chart(ctx).Pie(pieData);
+                                
+			};
+
+    
+	</script>
+   {% endfor %}   
           <h2 class="sub-header">Tweets</h2>
+          
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Tweets</th>
+                  <th></th>
                   <th></th>
                   <th></th>
                   <th></th>
@@ -84,7 +104,7 @@
                 </tr>
               </thead>
               <tbody>
-                {% for RedMart in tweets %}
+               {% for RedMart in tweets %} 
                 <tr>
                  
                   <td>{{ RedMart['tweet_text'] }}</td>
