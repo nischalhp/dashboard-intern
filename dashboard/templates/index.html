@@ -121,16 +121,16 @@ var pieData = [
 
             <table style="table-layout:Fixed;" class="table table-striped" >
             <col width="400">
-            <col width="63">
+            <col width="54">
             <col width="200">
-            <col width="100">
+            
             </col>    
               <thead>
                 <tr>
                   <th>Text</th>
                   <th>Date</th>
                   <th>Sentiment Bar</th>
-                  <th>Entities</th>
+                  
                   
                 </tr>
               </thead>
@@ -142,7 +142,7 @@ var pieData = [
                   <td>{{ RedMart['tweet_text'] }}</td>
                   <td style="overflow:hidden; white-space: nowrap;">{{ RedMart['Created_at']}}</td>
                   <td><div name='{{RedMart['pos']}}' >{{ RedMart['pos']}}</div></td>
-                  <td></td>
+                  
                 </tr>
                 {% endfor %}
               </tbody>     
