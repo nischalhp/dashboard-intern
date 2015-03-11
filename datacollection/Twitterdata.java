@@ -64,7 +64,7 @@ public class Twitterdata {
             System.out.println("Connecting to Mongo DB..");
             Mongo mongo;
             mongo = new Mongo("127.0.0.1");
-            db = mongo.getDB("tweetDB2");
+            db = mongo.getDB("sentiment");
         } catch (UnknownHostException ex) {
             System.out.println("MongoDB Connection Error :" + ex.getMessage());
         }
