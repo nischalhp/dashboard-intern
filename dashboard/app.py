@@ -3,7 +3,7 @@ from flask.ext.pymongo import PyMongo
 
 
 app = Flask(__name__)
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/tweetDB2'
+app.config['MONGO_URI'] = 'mongodb://localhost:27017/sentiment'
 mongo = PyMongo(app)
 
 @app.route('/')
@@ -11,9 +11,9 @@ mongo = PyMongo(app)
 def index():
     tweets = mongo.db.RedMartcom.find({"classify": { "$exists":True}}).sort([("Created_at", -1)])
     countcl = mongo.db.countclassify.find({"cneg": {  "$exists":True}})
-   
+
     for RedMart in tweets,countcl:
-       
+
         return render_template('index.html',tweets=tweets,countcl=countcl)
 
 if __name__ == '__main__':

@@ -18,24 +18,89 @@
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    
+
     <script src="static/js/ie-emulation-modes-warning.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
     <script src="static/js/Chart.js"></script>
-    
-    
+
     <script src="static/js/jquery_simple_progressbar.js"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.4.1/canvas.min.js"></script>
+
+
+
+      <script>
+          var tweetdat = [];
+          var tweetstructure = {};
+      {% for tweet in tweets %}
+        var tweetstructure = {};
+       tweetstructure["user_name"] = "{{ tweet["user_name"]|safe }}";
+       tweetstructure["tweet_text"] = "{{ tweet["tweet_text"] }}";
+       tweetstructure["Created_at"] = "{{ tweet["Created_at"]|safe }}";
+       tweetstructure["neg"] = "{{ tweet["neg"]|safe }}";
+       tweetstructure["pos"] = "{{ tweet["pos"]|safe }}";
+       tweetstructure["tweet_id"] = "{{tweet["tweet_ID"]}}" ;
+       tweetstructure["classify"] = "{{ tweet["classify"] }}";
+          tweetdat.push(tweetstructure);
+      {% endfor%}
+
+      $(document).ready(function(){
+          var data = "<table class='table table-hover'><col width='60%'><col width='20%'><col width='20%'>";
+          data+="<tr><th>Text</th><th>Date</th><th>Sentiment Bar</th></tr></table><div id='tweetdiv'>";
+          data+="<table class='table table-striped table-hover' id='tweettable' ><col width='60%'><col width='20%'><col width='20%'><tbody>";
+          for(index in tweetdat){
+          data+="<tr><td>"+ tweetdat[index]["tweet_text"]+ "</td><td>"+tweetdat[index]["Created_at"]+"</td><td id='"+tweetdat[index]['tweet_id'] +"' data='"+tweetdat[index]['pos']+"_"+tweetdat[index]['neg']+" style='padding:15px'></td></tr>";
+              console.log(tweetdat[index]["user_name"]);
+          }
+          data+="</tbody></table></div>"
+          $("#tweetsdata").append(data);
+
+        $('#tweettable').each(function () {
+         console.log("rowfunc");
+        var rows = this.rows;
+            console.log(rows);
+        $(rows).each(function(a,b) {
+        var sentiment = $(b.children[2]).attr("data").split("_");
+            var sentId  = $(b.children[2]).attr("id");
+            console.log(sentiment);
+            console.log(sentId);
+        var object = document.getElementById(sentId);
+        $(object).simple_progressbar({
+         value: sentiment[0] * 100 ,height: '25px',
+                                           internalPadding: '1px',
+                                           normalColor: 'LightGreen',
+                                           backgroundColor: 'Orange',
+                                           width: '120px'});
+                                           });
+        });
+
+      });
+      </script>
+
     <style>
         #content {
-            padding-left: 50px; 
+            padding-left: 50px;
             margin-top:150px;
-            font-family: verdana
+            font-family: verdana;
         }
         #content pre, #content p {
             margin-bottom: 50px;
         }
+        #bargraphs
+        {
+            padding: 50px;
+            height: 300px;
+            margin-top: 10px;
+        }
+
+        #tweetsheader{
+        margin-top: 150px;
+        }
+        #tweetdiv{
+            height: 300px;
+            overflow: scroll;
+        }
+
     </style>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -46,8 +111,6 @@
   </head>
 
   <body>
-     
-
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -59,121 +122,145 @@
           </button>
           <a class="navbar-brand" href="#">REDMART</a>
         </div>
-    
+
       </div>
     </nav>
 
-
         <div class="container main">
-                       <h1 class="page-header" align="center">Social Media Dashboard</h1>
-         
- 
-          <div id="canvas-holder" align="center">
-			<canvas id="chart-area" width="300" height="300" />
-		</div>
+            <h1 class="page-header" align="center"> Social Media Dashboard <small> Beta </small></h1>
 
-  {% for RedMart in countcl %}          
+
+          <div id="canvas-holder" align="center">
+            <canvas id="chart-area" width="300" height="300" />
+        </div>
+        </br>
+        </br>
+        </br>
+        <div class="form-actions" id="bargraphs">
+            <div id="chartContainer">
+            A
+            </div>
+        </div>
+        <h2 class="sub-header" id="tweetsheader"> Tweets </h2>
+        <div id="tweetsdata">
+
+
+    </div>
+     </div>
+      </div>
+    </div>
+<div>
+{% for tweet in tweets %}
+
+{{ tweet['tweet_text']|safe}}
+
+{% endfor %}
+</div>
+{% for RedMart in countcl %}
+
+
+<script>
+    var posPercent =  ({{ RedMart['cpos'] }} * 100.0)/({{RedMart['cpos'] }} + {{ RedMart['cneg'] }});
+    var negPercent =  ({{ RedMart['cneg'] }} * 100.0)/({{ RedMart['cpos'] }}+ {{ RedMart['cneg'] }});
+    console.log("posPercent " + posPercent.toFixed(3) + " negPercent "+ negPercent.toFixed(3));
+    posPercent = Math.round(posPercent.toFixed(2));
+    negPercent = Math.round(negPercent.toFixed(2));
+    var pieData = [
+                            {
+                    value: posPercent,
+                    color: "#46BFBD",
+                    highlight: "#5AD3D1",
+                    label: "POSITIVE"
+                                },
+
+                {
+                    value:negPercent,
+                    color:"#F7464A",
+                    highlight: "#FF5A5E",
+                    label: "NEGATIVE"
+
+                }
+
+
+            ];
+
+            window.onload = function(){
+                var ctx = document.getElementById("chart-area").getContext("2d");
+                window.myPie = new Chart(ctx).Pie(pieData);
+                createBarGraph();
+
+            };
+
+
+    </script>
+{% endfor %}
+
+
+
+<script type="text/javascript">
+    function getPosCount(date){
+    var count = 0 ;
+    for(index  in  tweetdat){
+
+        var createdAt = new Date(tweetdat[index]["Created_at"]);
+        console.log("Created_at_sent " + createdAt.getTime());
+        console.log("Created_at_here " +  date.getTime());
+        if(( createdAt.getTime().toString() == date.getTime().toString()) && (tweetdat["classify"] == "pos")){
+        count = count + 1;
+        }
+    }
+        console.log("POSITIVE " + count + " " + date);
+        return count;
+    }
+
+    function createBarGraph(){
+    var dataPoints = [];
+    var poscount = 0;
+    var negcount = 0;
+    for(index  in  tweetdat){
+    var date = new Date();
+    var tweetdate  = new Date(tweetdat[index]["Created_at"]);
+    if(new Date(date - 60*60*24*7*1000) < tweetdate){
+        var data = {};
+        count =
+
+        data["label"] = tweetdate.getDate();
+        data["y"] = getPosCount(tweetdate);
+    }
+    }
+
+    var chart = new CanvasJS.Chart("chartContainer", {
+      title:{
+        text: "Last 7 days Response"
+      },
+      animationEnabled: true,
+      data: [//array of dataSeries
+        { //dataSeries object
+         /*** Change type "column" to "bar", "area", "line" or "pie"***/
+         type: "column",
+
+        dataPoints: [
+         { label: "banana", y: 18 },
+         { label: "orange", y: 29 },
+         { label: "apple", y: 40 },
+         { label: "mango", y: 34 },
+         { label: "grape", y: 24 }
+         ]
+       }
+       ]
+     });
+
+    chart.render();
+
+
+}
+</script>
+
 
 <script>
 
-var pieData = [   
-                            {   
-					value:{{ RedMart['cpos'] }} ,
-					color: "#46BFBD",
-					highlight: "#5AD3D1",
-					label: "POSITIVE" 
-                                       
-                                },
-                                
-				{    
-					value:{{ RedMart['cneg'] }},
-                                        color:"#F7464A",
-					highlight: "#FF5A5E",
-					label: "NEGATIVE"
-                                   
-				}
-                                
-
-			];
-
-			window.onload = function(){
-				var ctx = document.getElementById("chart-area").getContext("2d");
-				window.myPie = new Chart(ctx).Pie(pieData);
-                                
-			};
-
-    
-	</script>
-{% endfor %}   
 
 
-
-     <h2 class="sub-header">Tweets</h2>
-    
-    
-          
-         
-          <div class="table-responsive;" style="height: 1000px; width: 1000px;overflow:scroll;" >
-            
-      
-
-
-
-            <table style="table-layout:Fixed;" class="table table-striped" >
-            <col width="400">
-            <col width="54">
-            <col width="200">
-            
-            </col>    
-              <thead>
-                <tr>
-                  <th>Text</th>
-                  <th>Date</th>
-                  <th>Sentiment Bar</th>
-                  
-                  
-                </tr>
-              </thead>
-              <tbody id="content-body">
-               
-               {% for RedMart in tweets %} 
-                <tr>
-                 
-                  <td>{{ RedMart['tweet_text'] }}</td>
-                  <td style="overflow:hidden; white-space: nowrap;">{{ RedMart['Created_at']}}</td>
-                  <td><div name='{{RedMart['pos']}}' >{{ RedMart['pos']}}</div></td>
-                  
-                </tr>
-                {% endfor %}
-              </tbody>     
-           
-            </table>
-      
-          </div>
-        </div>
-      </div>
-    </div>
- 
-      
-     <script>
-       
-      
-     $('#content-body').each(function () {
-        
-        var rows = this.rows;
-        $(rows).each(function() {
-        var sentiment = $(this.children[2]).text();  
-        console.log(sentiment);
-        var object = document.getElementsByName(sentiment);  
-        $(object).simple_progressbar({
-         value: sentiment * 100 ,height: '25px',
-                                           internalPadding: '1px',
-                                           normalColor: 'green',
-                                           backgroundColor: 'red',
-                                           width: '200px'});
-                                           });
-        });
-       
     </script>
   </body>
 </html>

@@ -13,7 +13,7 @@ body {
  * Global add-ons
  */
 
-.sub-header {
+.tweetsDiv {
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
 }
@@ -24,7 +24,7 @@ body {
  */
 .navbar-fixed-top {
   border: 0;
-  color:red;
+  color:orange;
 }
 
 /*
@@ -85,7 +85,6 @@ body {
 }
 .main .page-header {
   margin-top: 0;
-  color:red;
 }
 
 
