@@ -25,7 +25,9 @@
     <script src="static/js/Chart.js"></script>
 
     <script src="static/js/jquery_simple_progressbar.js"></script>
+    <script src="static/js/dashboard.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.4.1/canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.3.0/snap.svg-min.js"></script>
 
 
 
@@ -33,7 +35,7 @@
           var tweetdat = [];
           var tweetstructure = {};
       {% for tweet in tweets %}
-        var tweetstructure = {};
+       var tweetstructure = {};
        tweetstructure["user_name"] = "{{ tweet["user_name"]|safe }}";
        tweetstructure["tweet_text"] = "{{ tweet["tweet_text"] }}";
        tweetstructure["Created_at"] = "{{ tweet["Created_at"]|safe }}";
@@ -41,40 +43,8 @@
        tweetstructure["pos"] = "{{ tweet["pos"]|safe }}";
        tweetstructure["tweet_id"] = "{{tweet["tweet_ID"]}}" ;
        tweetstructure["classify"] = "{{ tweet["classify"] }}";
-          tweetdat.push(tweetstructure);
+       tweetdat.push(tweetstructure);
       {% endfor%}
-
-      $(document).ready(function(){
-          var data = "<table class='table table-hover'><col width='60%'><col width='20%'><col width='20%'>";
-          data+="<tr><th>Text</th><th>Date</th><th>Sentiment Bar</th></tr></table><div id='tweetdiv'>";
-          data+="<table class='table table-striped table-hover' id='tweettable' ><col width='60%'><col width='20%'><col width='20%'><tbody>";
-          for(index in tweetdat){
-          data+="<tr><td>"+ tweetdat[index]["tweet_text"]+ "</td><td>"+tweetdat[index]["Created_at"]+"</td><td id='"+tweetdat[index]['tweet_id'] +"' data='"+tweetdat[index]['pos']+"_"+tweetdat[index]['neg']+" style='padding:15px'></td></tr>";
-              console.log(tweetdat[index]["user_name"]);
-          }
-          data+="</tbody></table></div>"
-          $("#tweetsdata").append(data);
-
-        $('#tweettable').each(function () {
-         console.log("rowfunc");
-        var rows = this.rows;
-            console.log(rows);
-        $(rows).each(function(a,b) {
-        var sentiment = $(b.children[2]).attr("data").split("_");
-            var sentId  = $(b.children[2]).attr("id");
-            console.log(sentiment);
-            console.log(sentId);
-        var object = document.getElementById(sentId);
-        $(object).simple_progressbar({
-         value: sentiment[0] * 100 ,height: '25px',
-                                           internalPadding: '1px',
-                                           normalColor: 'LightGreen',
-                                           backgroundColor: 'Orange',
-                                           width: '120px'});
-                                           });
-        });
-
-      });
       </script>
 
     <style>
@@ -86,11 +56,10 @@
         #content pre, #content p {
             margin-bottom: 50px;
         }
-        #bargraphs
+        #chartContainer
         {
-            padding: 50px;
             height: 300px;
-            margin-top: 10px;
+            padding: 7px;
         }
 
         #tweetsheader{
@@ -99,6 +68,21 @@
         #tweetdiv{
             height: 300px;
             overflow: scroll;
+        }
+
+        thead{
+            background-color:dimgray;
+            color: azure;
+        }
+
+        .glyphicon-thumbs-up {
+            color:chartreuse;
+            font-size: 50px;
+        }
+
+        .glyphicon-thumbs-down {
+            color:#FF5A5E;
+            font-size: 50px;
         }
 
     </style>
@@ -129,19 +113,18 @@
         <div class="container main">
             <h1 class="page-header" align="center"> Social Media Dashboard <small> Beta </small></h1>
 
-
-          <div id="canvas-holder" align="center">
-            <canvas id="chart-area" width="300" height="300" />
-        </div>
-        </br>
-        </br>
-        </br>
-        <div class="form-actions" id="bargraphs">
-            <div id="chartContainer">
-            A
+            <div class="container">
+            <div class="row">
+            <div class="form-actions col-md-9 col-xs-12 col-lg-9 col-sm-12" id="chartContainer">
             </div>
+          <div id="canvas-holder" class="col-md-3 col-xs-12 col-lg-3 col-sm-12">
+            <canvas id="chart-area"  height="300" />
         </div>
-        <h2 class="sub-header" id="tweetsheader"> Tweets </h2>
+        </div>
+        </div>
+        <div >
+        <h2 class="sub-header col-md- col-xs-12 col-lg-12 col-sm-12" id="tweetsheader"> Tweets </h2>
+        </div>
         <div id="tweetsdata">
 
 
@@ -190,78 +173,8 @@
                 createBarGraph();
 
             };
-
-
     </script>
 {% endfor %}
-
-
-
-<script type="text/javascript">
-    function getPosCount(date){
-    var count = 0 ;
-    for(index  in  tweetdat){
-
-        var createdAt = new Date(tweetdat[index]["Created_at"]);
-        console.log("Created_at_sent " + createdAt.getTime());
-        console.log("Created_at_here " +  date.getTime());
-        if(( createdAt.getTime().toString() == date.getTime().toString()) && (tweetdat["classify"] == "pos")){
-        count = count + 1;
-        }
-    }
-        console.log("POSITIVE " + count + " " + date);
-        return count;
-    }
-
-    function createBarGraph(){
-    var dataPoints = [];
-    var poscount = 0;
-    var negcount = 0;
-    for(index  in  tweetdat){
-    var date = new Date();
-    var tweetdate  = new Date(tweetdat[index]["Created_at"]);
-    if(new Date(date - 60*60*24*7*1000) < tweetdate){
-        var data = {};
-        count =
-
-        data["label"] = tweetdate.getDate();
-        data["y"] = getPosCount(tweetdate);
-    }
-    }
-
-    var chart = new CanvasJS.Chart("chartContainer", {
-      title:{
-        text: "Last 7 days Response"
-      },
-      animationEnabled: true,
-      data: [//array of dataSeries
-        { //dataSeries object
-         /*** Change type "column" to "bar", "area", "line" or "pie"***/
-         type: "column",
-
-        dataPoints: [
-         { label: "banana", y: 18 },
-         { label: "orange", y: 29 },
-         { label: "apple", y: 40 },
-         { label: "mango", y: 34 },
-         { label: "grape", y: 24 }
-         ]
-       }
-       ]
-     });
-
-    chart.render();
-
-
-}
-</script>
-
-
-<script>
-
-
-
-    </script>
   </body>
 </html>
 
