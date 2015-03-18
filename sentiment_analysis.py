@@ -34,27 +34,9 @@ def evaluate_features(feature_select):
 				negWords = [feature_select(negWords), 'neg']
 				negFeatures.append(negWords)
 
-	with open(RT_POLARITY_NEG_FILE, 'r') as negSentences:
-		for i in negSentences:
-			negWords = re.findall(r"[\w']+|[.,!?;]", i.rstrip())
-			negWords = [feature_select(negWords), 'neg']
-			negFeatures.append(negWords)
 
-	with open(USER_DEFINED_NEG_FILE, 'r') as negSentences:
-		for i in negSentences:
-			negWords = re.findall(r"[\w']+|[.,!?;]", i.rstrip())
-			negWords = [feature_select(negWords), 'neg']
-			negFeatures.append(negWords)
-
-	with open(RT_POLARITY_POS_FILE, 'r') as posSentences:
-		for i in posSentences:
-			posWords= re.findall(r"[\w']+|[.,!?;]", i.rstrip())
-			posWords= [feature_select(posWords), 'pos']
-			posFeatures.append(posWords)
-
-	#selects 3/4 of the features to be used for training and 1/4 to be used for testing
-	posCutoff = int(math.floor(len(posFeatures)*3/4))
-	negCutoff = int(math.floor(len(negFeatures)*3/4))
+	posCutoff = int(math.floor(len(posFeatures)))
+	negCutoff = int(math.floor(len(negFeatures)))
 	trainFeatures = posFeatures[:posCutoff] + negFeatures[:negCutoff]
 	testFeatures = posFeatures[posCutoff:] + negFeatures[negCutoff:]
 
@@ -85,20 +67,6 @@ def create_word_scores():
 				negWord = re.findall(r"[\w']+|[.,!?;]", i.rstrip())
 				negWords.append(negWord)
 
-	with open(RT_POLARITY_NEG_FILE, 'r') as negSentences:
-		for i in negSentences:
-			negWord = re.findall(r"[\w']+|[.,!?;]", i.rstrip())
-			negWords.append(negWord)
-
-	with open(RT_POLARITY_POS_FILE, 'r') as posSentences:
-		for i in posSentences:
-			posWord = re.findall(r"[\w']+|[.,!?;]", i.rstrip())
-			posWords.append(posWord)
-
-	with open(USER_DEFINED_NEG_FILE, 'r') as negSentences:
-		for i in negSentences:
-			negWord = re.findall(r"[\w']+|[.,!?;]", i.rstrip())
-			negWords.append(negWord)
 
 	posWords = list(itertools.chain(*posWords))
 	negWords = list(itertools.chain(*negWords))
@@ -154,7 +122,7 @@ def initiate_classifier():
 	#finds word scores
 	word_scores = create_word_scores()
 	#numbers of features to select
-	numbers_to_test = [1000]
+	numbers_to_test = [750]
 	#tries the best_word_features mechanism with each of the numbers_to_test of features
 	for num in numbers_to_test:
 		print 'evaluating best %d word features' % (num)
@@ -162,5 +130,6 @@ def initiate_classifier():
 		best_words = find_best_words(word_scores, num)
 		evaluate_features(best_word_features)
 
-
-#predicted = get_sentiment("@RedMartcom was supposed to deliver between 7 to 9pm..but they just arrived. first time they are failing. bad.")
+initiate_classifier()
+predicted = get_sentiment("Worst customer service i experienced ")
+print predicted
