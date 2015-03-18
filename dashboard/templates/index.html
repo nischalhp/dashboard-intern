@@ -39,8 +39,6 @@
        tweetstructure["user_name"] = "{{ tweet["user_name"]|safe }}";
        tweetstructure["tweet_text"] = "{{ tweet["tweet_text"] }}";
        tweetstructure["Created_at"] = "{{ tweet["Created_at"]|safe }}";
-       tweetstructure["neg"] = "{{ tweet["neg"]|safe }}";
-       tweetstructure["pos"] = "{{ tweet["pos"]|safe }}";
        tweetstructure["tweet_id"] = "{{tweet["tweet_ID"]}}" ;
        tweetstructure["classify"] = "{{ tweet["classify"] }}";
        tweetdat.push(tweetstructure);
