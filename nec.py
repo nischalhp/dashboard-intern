@@ -5,8 +5,10 @@ import re
 import datetime
 import sentiment_analysis
 
+print "hello"
+
 client = pymongo.MongoClient('mongodb://localhost:27017/tweetDB2')
-db = client['tweetDB2']
+db = client['sentiment']
 RedMartc = db['RedMartcom']
 
 
