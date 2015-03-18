@@ -9,7 +9,7 @@ import os
 import sentiment_analysis
 
 
-client = pymongo.MongoClient('mongodb://localhost:27017/tweetDB2')
+client = pymongo.MongoClient('mongodb://localhost:27017/sentiment')
 db = client['sentiment']
 RedMartc = db['RedMartcom']
 
@@ -24,7 +24,8 @@ def get_sentiments(data):
 
 def visited():
 	sentiment_analysis.initiate_classifier()    
-	tweets = RedMartc.find({"classify": {"$exists":False}})
+	#tweets = redmartc.find({"classify": {"$exists":false}})
+	tweets = RedMartc.find()
 	for RedMart in tweets:
 	    get_sentiments(RedMart)
 	    time.sleep(5)
