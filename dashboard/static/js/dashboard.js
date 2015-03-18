@@ -3,7 +3,7 @@ $(document).ready(function(){
           data+="<thead><tr><th>Text</th><th>Date</th><th>Sentiment</th></tr></thead></table><div id='tweetdiv'>";
           data+="<table class='table table-striped table-hover table-bordered' id='tweettable'><col width='60%'><col width='20%'><col width='20%'><tbody>";
           for(index in tweetdat){
-          data+="<tr><td>"+ tweetdat[index]["tweet_text"]+ "</td><td>"+tweetdat[index]["Created_at"]+"</td><td id='"+tweetdat[index]['tweet_id'] +"' data='"+tweetdat[index]['classify']+"' style='padding:15px'></td></tr>";
+          data+="<tr><td>"+ tweetdat[index]["tweet_text"]+ "</td><td>"+tweetdat[index]["Created_at"]+"</td><td id='"+tweetdat[index]['_id'] +"' data='"+tweetdat[index]['classify']+"' style='padding:15px'></td></tr>";
               console.log(tweetdat[index]["user_name"]);
           }
           data+="</tbody></table></div><table class='table'><col width='60%'><col width='20%'><col width='20%'><tfoot><tr><td></td><td></td><td></td></tr></tfoot></table>"
@@ -15,18 +15,18 @@ $(document).ready(function(){
             console.log(rows);
         $(rows).each(function(a,b) {
         var sentiment = $(b.children[2]).attr("data").toString();
-            var sentId  = $(b.children[2]).attr("id");
-            console.log(sentiment);
-            console.log(sentId);            
+        var sentId  = $(b.children[2]).attr("id");
+        console.log(sentiment);
+        console.log(sentId);            
         var object = document.getElementById(sentId);
         var bool = sentiment.toLowerCase()=="pos";
         console.log(sentiment.toLowerCase());
         console.log("bool " + bool);
         if( sentiment.toLowerCase()=="pos"){
-        $("#"+sentId).html("<center><span class='glyphicon glyphicon-thumbs-up' aria-hidden='true'></span></center>")
+        $("#"+sentId).html("<center><span class='glyphicon glyphicon-thumbs-up' aria-hidden='true'></span></center>");
         }
         else {
-        $("#"+sentId).html("<center><span class='glyphicon glyphicon-thumbs-down' aria-hidden='true'></span></center>")
+        $("#"+sentId).html("<center><span class='glyphicon glyphicon-thumbs-down' aria-hidden='true'></span></center>");
         }
                                            });
         });

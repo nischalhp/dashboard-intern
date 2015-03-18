@@ -40,6 +40,7 @@
        tweetstructure["tweet_text"] = "{{ tweet["tweet_text"] }}" ;
        tweetstructure["Created_at"] = "{{ tweet["Created_at"]|safe }}";
        tweetstructure["tweet_id"] = "{{tweet["tweet_ID"]}}" ;
+       tweetstructure["_id"] =  "{{tweet["_id"]}}" ;
        tweetstructure["classify"] = "{{ tweet["classify"] }}";
        tweetdat.push(tweetstructure);
       {% endfor%}
