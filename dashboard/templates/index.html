@@ -37,7 +37,7 @@
       {% for tweet in tweets %}
        var tweetstructure = {};
        tweetstructure["user_name"] = "{{ tweet["user_name"]|safe }}";
-       tweetstructure["tweet_text"] = "{{ tweet["tweet_text"] }}";
+       tweetstructure["tweet_text"] = ("{{ tweet["tweet_text"] }}").replace(/(\r\n|\n|\r)/gm,"");
        tweetstructure["Created_at"] = "{{ tweet["Created_at"]|safe }}";
        tweetstructure["tweet_id"] = "{{tweet["tweet_ID"]}}" ;
        tweetstructure["classify"] = "{{ tweet["classify"] }}";
