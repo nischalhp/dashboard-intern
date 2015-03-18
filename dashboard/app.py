@@ -17,6 +17,6 @@ def index():
         return render_template('index.html',tweets=tweets,countcl=countcl)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0')
 
 
