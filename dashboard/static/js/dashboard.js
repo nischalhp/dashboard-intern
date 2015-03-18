@@ -1,12 +1,12 @@
 $(document).ready(function(){
           var data = "<table class='table'><col width='60%'><col width='20%'><col width='20%'>";
           data+="<thead><tr><th>Text</th><th>Date</th><th>Sentiment</th></tr></thead></table><div id='tweetdiv'>";
-          data+="<table class='table table-striped table-hover' id='tweettable' ><col width='60%'><col width='20%'><col width='20%'><tbody>";
+          data+="<table class='table table-striped table-hover table-bordered' id='tweettable'><col width='60%'><col width='20%'><col width='20%'><tbody>";
           for(index in tweetdat){
           data+="<tr><td>"+ tweetdat[index]["tweet_text"]+ "</td><td>"+tweetdat[index]["Created_at"]+"</td><td id='"+tweetdat[index]['tweet_id'] +"' data='"+tweetdat[index]['classify']+"' style='padding:15px'></td></tr>";
               console.log(tweetdat[index]["user_name"]);
           }
-          data+="</tbody></table></div>"
+          data+="</tbody></table></div><table class='table'><col width='60%'><col width='20%'><col width='20%'><tfoot><tr><td></td><td></td><td></td></tr></tfoot></table>"
           $("#tweetsdata").append(data);
 
         $('#tweettable').each(function () {
