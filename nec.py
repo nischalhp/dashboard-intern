@@ -3,7 +3,11 @@ from pymongo import MongoClient
 import time
 import re
 import datetime
+import sys
+
+sys.path.insert(0,'/usr/tmp/repositories/dashboard/sentiment_analysis_python')
 import sentiment_analysis
+
 
 print "hello"
 
