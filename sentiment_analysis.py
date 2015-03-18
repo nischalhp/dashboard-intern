@@ -127,8 +127,6 @@ def create_word_scores():
 
 	return word_scores
 
-#finds word scores
-word_scores = create_word_scores()
 
 #finds the best 'number' words based on word scores
 def find_best_words(word_scores, number):
@@ -139,14 +137,6 @@ def find_best_words(word_scores, number):
 #creates feature selection mechanism that only uses best words
 def best_word_features(words):
 	return dict([(word, True) for word in words if word in best_words])
-
-#numbers of features to select
-numbers_to_test = [1000]
-#tries the best_word_features mechanism with each of the numbers_to_test of features
-for num in numbers_to_test:
-	print 'evaluating best %d word features' % (num)
-	best_words = find_best_words(word_scores, num)
-	evaluate_features(best_word_features)
 
 
 def get_sentiment(tweet):
@@ -159,6 +149,18 @@ def get_sentiment(tweet):
 	for i, (features, label) in enumerate(testFeatures):
 		predicted = classifier.classify(features)
 		return predicted
+
+def initiate_classifier():
+	#finds word scores
+	word_scores = create_word_scores()
+	#numbers of features to select
+	numbers_to_test = [1000]
+	#tries the best_word_features mechanism with each of the numbers_to_test of features
+	for num in numbers_to_test:
+		print 'evaluating best %d word features' % (num)
+		global best_words
+		best_words = find_best_words(word_scores, num)
+		evaluate_features(best_word_features)
 
 
 #predicted = get_sentiment("@RedMartcom was supposed to deliver between 7 to 9pm..but they just arrived. first time they are failing. bad.")
