@@ -28,74 +28,7 @@
     <script src="static/js/dashboard.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.4.1/canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.3.0/snap.svg-min.js"></script>
-
-
-
-      <script>
-          var tweetdat = [];
-          var tweetstructure = {};
-      {% for tweet in tweets %}
-       var tweetstructure = {};
-       tweetstructure["user_name"] = "{{ tweet["user_name"]|safe }}";
-       tweetstructure["tweet_text"] = "{{ tweet["tweet_text"] }}" ;
-       tweetstructure["Created_at"] = "{{ tweet["Created_at"]|safe }}";
-       tweetstructure["tweet_id"] = "{{tweet["tweet_ID"]}}" ;
-       tweetstructure["_id"] =  "{{tweet["_id"]}}" ;
-       tweetstructure["classify"] = "{{ tweet["classify"] }}";
-       tweetdat.push(tweetstructure);
-      {% endfor%}
-      </script>
-
-    <style>
-        #content {
-            padding-left: 50px;
-            margin-top:150px;
-            font-family: verdana;
-        }
-        #content pre, #content p {
-            margin-bottom: 50px;
-        }
-        #chartContainer
-        {
-            height: 300px;
-            padding: 7px;
-        }
-
-        #tweetsheader{
-        margin-top: 50px;
-        }
-        #tweetdiv{
-            height: 300px;
-            overflow: scroll;
-        }
-
-        thead{
-            background-color:dimgray;
-            color: azure;
-        }
-
-        tfoot{
-            background-color:dimgray;
-            color: azure;
-        }
-
-        #footer {
-          background-color: #222222;
-          color: #D1D1D1;
-          padding: 20px;
-        }
-
-        .glyphicon-thumbs-up {
-            color:chartreuse;
-            font-size: 50px;
-        }
-
-        .glyphicon-thumbs-down {
-            color:#FF5A5E;
-            font-size: 50px;
-        }
-
-    </style>
+    
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -146,42 +79,7 @@
         <h4 class="muted credit" style="float:right;"> Powered By <a href="http://redmart.com">REDMART INDIA</a>        
         </h4>
       </div>
-{% for RedMart in countcl %}
 
-
-<script>
-    var posPercent =  ({{ RedMart['cpos'] }} * 100.0)/({{RedMart['cpos'] }} + {{ RedMart['cneg'] }});
-    var negPercent =  ({{ RedMart['cneg'] }} * 100.0)/({{ RedMart['cpos'] }}+ {{ RedMart['cneg'] }});
-    console.log("posPercent " + posPercent.toFixed(3) + " negPercent "+ negPercent.toFixed(3));
-    posPercent = Math.round(posPercent.toFixed(2));
-    negPercent = Math.round(negPercent.toFixed(2));
-    var pieData = [
-                            {
-                    value: posPercent,
-                    color: "#46BFBD",
-                    highlight: "#5AD3D1",
-                    label: "POSITIVE"
-                                },
-
-                {
-                    value:negPercent,
-                    color:"#F7464A",
-                    highlight: "#FF5A5E",
-                    label: "NEGATIVE"
-
-                }
-
-
-            ];
-
-            window.onload = function(){
-                var ctx = document.getElementById("chart-area").getContext("2d");
-                window.myPie = new Chart(ctx).Pie(pieData);
-                createBarGraph();
-
-            };
-    </script>
-{% endfor %}
   </body>
 </html>
 

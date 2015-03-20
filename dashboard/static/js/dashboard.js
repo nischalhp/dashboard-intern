@@ -1,6 +1,27 @@
-$(document).ready(function(){
+
+      var tweetdat = [];      
+      $(document).ready(function(){ 
+            $.ajax({
+              url:'/tweets',
+              type:"GET",
+              async:false,
+              success:function(data){
+              for( tweet in data["tweets"] ){
+                var twt = data["tweets"][tweet];
+                console.log(twt);
+                  var tweetstructure = {};
+                  tweetstructure["user_name"] = twt["user_name"];
+                    tweetstructure["tweet_text"] = twt["tweet_text"];
+                    tweetstructure["Created_at"] = twt["Created_at"];
+                    tweetstructure["tweet_id"] = twt["tweet_ID"];
+                    tweetstructure["_id"] =  twt["_id"];
+                    tweetstructure["classify"] = twt["classify"];
+                    tweetdat.push(tweetstructure);                    
+                  }                   
+                  console.log("final");   
+                  console.log(tweetdat);
           var data = "<table class='table'><col width='60%'><col width='20%'><col width='20%'>";
-          data+="<thead><tr><th>Text</th><th>Date</th><th>Sentiment</th></tr></thead></table><div id='tweetdiv'>";
+          data += "<thead><tr><th>Text</th><th>Date</th><th>Sentiment</th></tr></thead></table><div id='tweetdiv'>";
           data+="<table class='table table-striped table-hover table-bordered' id='tweettable'><col width='60%'><col width='20%'><col width='20%'><tbody>";
           for(index in tweetdat){
           data+="<tr><td>"+ tweetdat[index]["tweet_text"]+ "</td><td>"+tweetdat[index]["Created_at"]+"</td><td id='"+tweetdat[index]['_id'] +"' data='"+tweetdat[index]['classify']+"' style='padding:15px'></td></tr>";
@@ -8,7 +29,6 @@ $(document).ready(function(){
           }
           data+="</tbody></table></div><table class='table'><col width='60%'><col width='20%'><col width='20%'><tfoot><tr><td></td><td></td><td></td></tr></tfoot></table>"
           $("#tweetsdata").append(data);
-
         $('#tweettable').each(function () {
          console.log("rowfunc");
         var rows = this.rows;
@@ -21,7 +41,6 @@ $(document).ready(function(){
         var object = document.getElementById(sentId);
         var bool = sentiment.toLowerCase()=="pos";
         console.log(sentiment.toLowerCase());
-        console.log("bool " + bool);
         if( sentiment.toLowerCase()=="pos"){
         $("#"+sentId).html("<center><span class='glyphicon glyphicon-thumbs-up' aria-hidden='true'></span></center>");
         }
@@ -31,7 +50,52 @@ $(document).ready(function(){
                                            });
         });
 
+              }
+    });
+
+        
+        $.ajax({
+              url:'/getcount',
+              type:"GET",
+              async:false,
+              success:function(data){   
+                var countcl = data;
+                console.log("sdjncksdnc countcl");
+                console.log(countcl["countcl"]);
+                var posPercent =  ( countcl["countcl"][0]['cpos'] * 100.0)/( countcl["countcl"][0]['cpos'] +  countcl["countcl"][0]['cneg'] );
+                var negPercent =  ( countcl["countcl"][0]['cneg'] * 100.0)/( countcl["countcl"][0]['cpos'] +  countcl["countcl"][0]['cneg'] );
+                console.log("posPercent " + posPercent.toFixed(3) + " negPercent "+ negPercent.toFixed(3));
+                posPercent = Math.round(posPercent.toFixed(2));
+                negPercent = Math.round(negPercent.toFixed(2));
+                var pieData = [
+                              {
+                        value: posPercent,
+                        color: "#46BFBD",
+                        highlight: "#5AD3D1",
+                        label: "POSITIVE"
+                                    },
+
+                    {
+                        value:negPercent,
+                        color:"#F7464A",
+                        highlight: "#FF5A5E",
+                        label: "NEGATIVE"
+
+                    }
+
+                ];  
+
+            window.onload = function(){
+                var ctx = document.getElementById("chart-area").getContext("2d");
+                window.myPie = new Chart(ctx).Pie(pieData);
+                createBarGraph();
+
+            };
+          }
+        });
       });
+
+
 
 function getPosCount(date){
     var count = 0 ;

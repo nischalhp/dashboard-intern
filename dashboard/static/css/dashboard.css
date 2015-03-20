@@ -106,3 +106,53 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
+
+
+
+#content {
+            padding-left: 50px;
+            margin-top:150px;
+            font-family: verdana;
+        }
+        #content pre, #content p {
+            margin-bottom: 50px;
+        }
+        #chartContainer
+        {
+            height: 300px;
+            padding: 7px;
+        }
+
+        #tweetsheader{
+        margin-top: 50px;
+        }
+        #tweetdiv{
+            height: 300px;
+            overflow: scroll;
+        }
+
+        thead{
+            background-color:dimgray;
+            color: azure;
+        }
+
+        tfoot{
+            background-color:dimgray;
+            color: azure;
+        }
+
+        #footer {
+          background-color: #222222;
+          color: #D1D1D1;
+          padding: 20px;
+        }
+
+        .glyphicon-thumbs-up {
+            color:chartreuse;
+            font-size: 50px;
+        }
+
+        .glyphicon-thumbs-down {
+            color:#FF5A5E;
+            font-size: 50px;
+        }
